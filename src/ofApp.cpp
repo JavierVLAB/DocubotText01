@@ -155,8 +155,8 @@ void ofApp::screenVideoRecorder(){
     ofDrawBitmapString(ss.str(),15,15);
 
     if(bRecording){
-    ofSetColor(255, 0, 0);
-    ofCircle(ofGetWidth() - 20, 20, 5);
+	    ofSetColor(255, 0, 0);
+	    ofCircle(ofGetWidth() - 20, 20, 5);
     }
 }
 
@@ -169,7 +169,12 @@ void ofApp::screenName(){
 	ImGui::InputText("Name", projectName, IM_ARRAYSIZE(projectName));
 	ImGui::InputText("Description", projectDescription, IM_ARRAYSIZE(projectDescription));
 
-	if (ImGui::Button("Next")) { screen++; }
+	if (ImGui::Button("Next")) { 
+		screen++;
+		fileName = "";
+		fileName += projectName; 
+
+	}
 
 
 }
@@ -187,7 +192,10 @@ void ofApp::screenMediaName(){
 		cout << categoryID << endl;
 	}
 
-	if (ImGui::Button("Next")) { screen++; }
+	if (ImGui::Button("Next")) { 
+		screen++; 
+		fileName += "Projects/" + categories[categoryID] + "/" + videoName;
+	}
 
 
 }
@@ -214,13 +222,7 @@ void ofApp::screenPhotoVideo(){
 	
 
 	if (ImGui::Button("Next")) {
-		if(mediaFormat == 0){
-			 screen = 3;
 
-		} else {
-			 screen = 7;
-
-		}
 	}
 
 
@@ -407,9 +409,11 @@ void ofApp::endSaveSubtitlesFile(){
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 
-			if(key == OF_KEY_SPACE){
-				change = 1;
-			}
+	if(key == OF_KEY_SPACE){
+		change = 1;
+	}
+
+
 
     if(key=='r'){
         bRecording = !bRecording;
