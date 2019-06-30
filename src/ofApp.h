@@ -107,5 +107,6 @@ class ofApp : public ofBaseApp{
 		
 		ofSerial	serial;
 		void readSerialBus(int idUsb);
+		void flags();
 		int flagRect = 0;
 };

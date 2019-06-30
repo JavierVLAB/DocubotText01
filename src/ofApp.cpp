@@ -148,24 +148,20 @@ void ofApp::draw(){
 
     case 6:
     	imgScreen[10].draw(0,0);
-    	if(change){screen++;change=0;}
-    	break;
-
-    case 7:
-    	imgScreen[3].draw(0,0);
     	if(change){screen=0;change=0;}
     	break;
 
 	}  
 
 
-
+	change = 0;
 	gui.end();
 
 }
 
 //--------------------------------------
 void ofApp::screenVideoRecorder(){
+
     ofSetColor(255, 255, 255);
     vidGrabber.draw(ofGetWidth()/2 - 320,ofGetHeight()/2-200);
 
@@ -188,8 +184,9 @@ void ofApp::screenVideoRecorder(){
 
 
     if(flagRect){
-    	ofBackground(0,255,255);
     	flagRect = 0;
+    	ofBackground(0,255,255);
+    	
     }
 
 }
@@ -295,7 +292,16 @@ void ofApp::readSerialBus(int idUsb){
 	
 	memcpy(bytesReadString, bytesReturned, 3);
 	
+	
+	if(bRecording){
+		//flags();
+	} else {
+		//change = 1;
+	}
 	if(nTimesRead >0) cout << "Received something USB microbit = " << bytesReadString << endl;
+
+
+
 
 }
 
@@ -503,6 +509,7 @@ void ofApp::keyReleased(int key){
             vidRecorder.setPaused(false);
         }
     }
+
     if(key=='c'){
         bRecording = false;
         flag = 0;
@@ -513,12 +520,17 @@ void ofApp::keyReleased(int key){
     }
 	
 	if (key == 'f') { // adding one subtitle
-		flag += 1;
-		int actualVideoFrame = vidRecorder.getNumVideoFramesRecorded();
-		addOneSubtitle(actualVideoFrame, "flag" + ofToString(flag));
-		flagRect = 1;
+		flags();
 		
 	}
+}
+
+void ofApp::flags(){
+	flag += 1;
+
+	int actualVideoFrame = vidRecorder.getNumVideoFramesRecorded();
+	addOneSubtitle(actualVideoFrame, "flag" + ofToString(flag));
+	flagRect = 1;
 }
 
 
