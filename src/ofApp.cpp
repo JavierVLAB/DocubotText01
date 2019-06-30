@@ -52,12 +52,37 @@ void ofApp::setup(){
     bRecording = false;
     ofEnableAlphaBlending();
 
+
+
+    // Serial Setup
+
+	
+	bSendSerialMessage = false;
+	ofBackground(255);	
+	ofSetLogLevel(OF_LOG_VERBOSE);
+	
+	
+	serial.listDevices();
+	vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
+	
+	int baud = 115200;
+	//serial.setup("/dev/cu.usbmodemFA142", baud); 
+	serial.setup("/dev/cu.usbmodem412", baud); 
+	
+	nTimesRead = 0;
+	nBytesRead = 0;
+	readTime = 0;
+	memset(bytesReadString, 0, 4);
+
+
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	if(screen == 4){
+	if(screen == 5){
 		vidGrabber.update();
     if(vidGrabber.isFrameNew() && bRecording){
         bool success = vidRecorder.addFrame(vidGrabber.getPixelsRef());
@@ -75,6 +100,8 @@ void ofApp::update(){
         ofLogWarning("The video recorder failed to write some audio samples!");
     }
   }
+
+  readSerialBus(1);
 
 }
 
@@ -98,17 +125,17 @@ void ofApp::draw(){
       break;
 
     case 2:  
-    	imgScreen[5].draw(0,0);
+      imgScreen[5].draw(0,0);
       screenPhotoVideo();
       break;  
 
     case 3:  
- 			imgScreen[6].draw(0,0);
+ 		imgScreen[6].draw(0,0);
   		screenMediaName();    
       break;
 
     case 4:  
-    	imgScreen[3].draw(0,0);
+      imgScreen[3].draw(0,0);
       //screenPlay();
       if(change){screen++;change=0;}
       break; 
@@ -158,6 +185,13 @@ void ofApp::screenVideoRecorder(){
 	    ofSetColor(255, 0, 0);
 	    ofCircle(ofGetWidth() - 20, 20, 5);
     }
+
+
+    if(flagRect){
+    	ofBackground(0,255,255);
+    	flagRect = 0;
+    }
+
 }
 
 //---------------------------------------
@@ -171,7 +205,10 @@ void ofApp::screenName(){
 
 	if (ImGui::Button("Next")) { 
 		screen++;
-		fileName = "";
+
+		//projectNameString = std::string myTitle(projectName);
+		//ofStringReplace(projectNameString," ","_");
+		fileName = "Projects/";
 		fileName += projectName; 
 
 	}
@@ -194,7 +231,8 @@ void ofApp::screenMediaName(){
 
 	if (ImGui::Button("Next")) { 
 		screen++; 
-		fileName += "Projects/" + categories[categoryID] + "/" + videoName;
+		//ofStringReplace(videoName," ","_");
+		fileName += "/" + categories[categoryID] + "/" + videoName;
 	}
 
 
@@ -217,20 +255,49 @@ void ofApp::screenPhotoVideo(){
 	//imgScreen[1].draw(0,0); 
 	ImGui::Text("Choose media format");
 
-  ImGui::RadioButton("Video", &mediaFormat, 0); ImGui::SameLine();
-  ImGui::RadioButton("Photo", &mediaFormat, 1); 
+  	ImGui::RadioButton("Video", &mediaFormat, 0); ImGui::SameLine();
+  	ImGui::RadioButton("Photo", &mediaFormat, 1); 
 	
 
 	if (ImGui::Button("Next")) {
-
+		screen++;
 	}
 
 
 }
 
-//------------------------------------
 
 
+//--------------------------------------------------------------
+void ofApp::readSerialBus(int idUsb){
+	// (2) read
+	// now we try to read 3 bytes
+	// since we might not get them all the time 3 - but sometimes 0, 6, or something else,
+	// we will try to read three bytes, as much as we can
+	// otherwise, we may have a "lag" if we don't read fast enough
+	// or just read three every time. now, we will be sure to
+	// read as much as we can in groups of three...
+	
+	nTimesRead = 0;
+	nBytesRead = 0;
+	int nRead  = 0;  // a temp variable to keep count per read
+	
+	unsigned char bytesReturned[3];
+	
+	memset(bytesReadString, 0, 4);
+	memset(bytesReturned, 0, 3);
+	
+	while( (nRead = serial.readBytes( bytesReturned, 3)) > 0){
+		nTimesRead++;
+		nBytesRead = nRead;
+	
+	};
+	
+	memcpy(bytesReadString, bytesReturned, 3);
+	
+	if(nTimesRead >0) cout << "Received something USB microbit = " << bytesReadString << endl;
+
+}
 
 
 
@@ -449,6 +516,8 @@ void ofApp::keyReleased(int key){
 		flag += 1;
 		int actualVideoFrame = vidRecorder.getNumVideoFramesRecorded();
 		addOneSubtitle(actualVideoFrame, "flag" + ofToString(flag));
+		flagRect = 1;
+		
 	}
 }
 
