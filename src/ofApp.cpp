@@ -4,6 +4,9 @@
 void ofApp::setup(){
 
 	gui.setup();
+	
+	//making a image button. Follow ImGui OF example
+	//imageButtonID = gui.loadImage("img/playButton.png"); //require variable declaration.
 
 	for (int i = 0; i < NScreen; i++)
 	{
@@ -29,6 +32,13 @@ void ofApp::setup(){
 
     ofSetFrameRate(60);
     ofSetLogLevel(OF_LOG_VERBOSE);
+	
+	//select my external or internal camera
+	vector<ofVideoDevice > namesDevices = vidGrabber.listDevices();
+	if(namesDevices.size() > 1)vidGrabber.setDeviceID(1);
+	else if (namesDevices.size() > 0)vidGrabber.setDeviceID(0);
+	else cout << "NO CAMERAS detected!" << endl;
+	
     vidGrabber.setDesiredFrameRate(30);
     vidGrabber.initGrabber(640,400);
 		#ifdef TARGET_WIN32
@@ -116,6 +126,7 @@ void ofApp::draw(){
     case 0:  
 
       imgScreen[0].draw(0,0);
+			
     	if(change){screen++;change=0;}
       break; 
 
