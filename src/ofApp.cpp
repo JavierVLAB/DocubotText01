@@ -217,7 +217,7 @@ void ofApp::screenStart(){
 	
 	bool pressed = false;
 	
-	cout << "Screen " << screen << endl;
+	//cout << "Screen " << screen << endl;
 	if(true)ImGui::SetWindowPos(ImVec2(29,14));
 	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
@@ -232,13 +232,42 @@ void ofApp::screenStart(){
 //--------------------------------------
 void ofApp::screenVideoRecorder(){
 
-	cout << "Screen " << screen << endl;
-	if(false)ImGui::SetWindowPos(ImVec2(146,360));
+	//cout << "Screen " << screen << endl;
+	if(true)ImGui::SetWindowPos(ImVec2(320,590));
 	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
-	if(false)ImGui::SetWindowSize((ImVec2(485,109)));
+	if(true)ImGui::SetWindowSize((ImVec2(235,60)));
 	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
 	
+	if(bRecording){
+		if (ImGui::Button("PAUSE")) { 
+			recording();
+		}
+		ImGui::SameLine(); 
+		if (ImGui::Button("FLAG")){
+			flags();
+    	}
+    	ImGui::SameLine(); 
+		if (ImGui::Button("STOP")){
+			bRecording = false;
+	        flag = 0;
+	        vidRecorder.close();
+    	}
+
+	} else {
+		if (ImGui::Button("PLAY")) { 
+			
+			recording();
+		}
+		ImGui::SameLine(); 
+		if (ImGui::Button("Next")){
+			screen++;
+    	}
+
+	}
+
+
+
 	
 	//////////////////////////////
 	
@@ -277,7 +306,7 @@ void ofApp::screenVideoRecorder(){
 //---------------------------------------
 void ofApp::screenName(){
 	
-	cout << "Screen " << screen << endl;
+	//cout << "Screen " << screen << endl;
 	if(true)ImGui::SetWindowPos(ImVec2(146,360));
 	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
@@ -308,11 +337,11 @@ void ofApp::screenName(){
 //---------------------------------------
 void ofApp::screenMediaName(){
 	
-	cout << "Screen " << screen << endl;
-	if(false)ImGui::SetWindowPos(ImVec2(146,360));
+	//cout << "Screen " << screen << endl;
+	if(true)ImGui::SetWindowPos(ImVec2(160,300));
 	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
-	if(false)ImGui::SetWindowSize((ImVec2(485,109)));
+	if(true)ImGui::SetWindowSize((ImVec2(380,160)));
 	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
 	
 	//////
@@ -338,7 +367,7 @@ void ofApp::screenPlay(){
 	
 	bool pressed = false;
 	
-	cout << "Screen " << screen << endl;
+	//cout << "Screen " << screen << endl;
 	if(true)ImGui::SetWindowPos(ImVec2(63,57));
 	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
@@ -358,7 +387,7 @@ void ofApp::screenPlay(){
 //---------------------------------------
 void ofApp::screenPhotoVideo(){
 	
-	cout << "Screen " << screen << endl;
+	//cout << "Screen " << screen << endl;
 	if(true)ImGui::SetWindowPos(ImVec2(159,299));
 	else cout << "gui 1 pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
@@ -426,7 +455,7 @@ void ofApp::screenEndOrRestart(){
 	bool pressedAddOne = false;
 	bool pressedExit = false;
 	
-	cout << "Screen " << screen << endl;
+	//cout << "Screen " << screen << endl;
 	if(true)ImGui::SetWindowPos(ImVec2(187,219));
 	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
@@ -659,6 +688,39 @@ void ofApp::endSaveSubtitlesFile(){
 }
 
 //--------------------------------------------------------------
+
+
+
+
+
+
+
+
+//--------------------------------
+
+void ofApp::recording(){
+	bRecording = !bRecording;
+        if(bRecording && !vidRecorder.isInitialized()) {
+            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, vidGrabber.getWidth(), vidGrabber.getHeight(), 30, sampleRate, channels);
+//          vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, vidGrabber.getWidth(), vidGrabber.getHeight(), 30);
+//            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, 0,0,0, sampleRate, channels); // no video
+//          vidRecorder.setupCustomOutput(vidGrabber.getWidth(), vidGrabber.getHeight(), 30, sampleRate, channels, "-vcodec mpeg4 -b 1600k -acodec mp2 -ab 128k -f mpegts udp://localhost:1234"); // for custom ffmpeg output string (streaming, etc)
+            
+            // Start recording
+            vidRecorder.start();
+			flag = 0;
+			//Save File subtitles
+			startSaveSubtitles();
+        }
+        else if(!bRecording && vidRecorder.isInitialized()) {
+            vidRecorder.setPaused(true);
+        }
+        else if(bRecording && vidRecorder.isInitialized()) {
+            vidRecorder.setPaused(false);
+        }
+
+}
+
 void ofApp::keyReleased(int key){
 
 	//TODO: check case when it's recording, and press SPACE. Must not change until end video recording.
@@ -669,25 +731,7 @@ void ofApp::keyReleased(int key){
 
 
     if(key=='r'){
-        bRecording = !bRecording;
-        if(bRecording && !vidRecorder.isInitialized()) {
-            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, vidGrabber.getWidth(), vidGrabber.getHeight(), 30, sampleRate, channels);
-//          vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, vidGrabber.getWidth(), vidGrabber.getHeight(), 30);
-//            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, 0,0,0, sampleRate, channels); // no video
-//          vidRecorder.setupCustomOutput(vidGrabber.getWidth(), vidGrabber.getHeight(), 30, sampleRate, channels, "-vcodec mpeg4 -b 1600k -acodec mp2 -ab 128k -f mpegts udp://localhost:1234"); // for custom ffmpeg output string (streaming, etc)
-            
-            // Start recording
-            vidRecorder.start();
-			
-			//Save File subtitles
-			startSaveSubtitles();
-        }
-        else if(!bRecording && vidRecorder.isInitialized()) {
-            vidRecorder.setPaused(true);
-        }
-        else if(bRecording && vidRecorder.isInitialized()) {
-            vidRecorder.setPaused(false);
-        }
+        recording();
     }
 
     if(key=='c'){

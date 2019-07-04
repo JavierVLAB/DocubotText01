@@ -115,4 +115,7 @@ class ofApp : public ofBaseApp{
 		void readSerialBus(int idUsb);
 		void flags();
 		int flagRect = 0;
+
+
+		void recording();
 };
