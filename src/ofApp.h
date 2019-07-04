@@ -33,12 +33,18 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 
+	void loadGuiImages();
+		void screenStart();
 		void screenName();
 		void screenPlay();
 		void screenPhotoVideo();
 		void screenMediaName();
+		void screenEndOrRestart();
 
 		ofxImGui::Gui gui;
+	    ofImage imageButtonLetsWorkSource, imageButtonVideoSource, imageButtonImageSource, imageButtonAddOneSource, imageButtonLetsStartSource, imageButtonExitSource, imageButtonRecordSource, imageButtonReStartSource;
+	    GLuint imageButtonLetsWorkID, imageButtonVideoSourceID, imageButtonImageSourceID, imageButtonAddOneSourceID, imageButtonLetsStartSourceID, imageButtonExitSourceID, imageButtonRecordSourceID, imageButtonReStartSourceID;
+	
 		int screen = 0;
 		ofImage imgScreen[NScreen];
 		int change = 0;

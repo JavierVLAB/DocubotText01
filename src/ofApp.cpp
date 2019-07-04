@@ -5,8 +5,8 @@ void ofApp::setup(){
 
 	gui.setup();
 	
-	//making a image button. Follow ImGui OF example
-	//imageButtonID = gui.loadImage("img/playButton.png"); //require variable declaration.
+	loadGuiImages();
+	
 
 	for (int i = 0; i < NScreen; i++)
 	{
@@ -111,7 +111,38 @@ void ofApp::update(){
     }
   }
 
-  readSerialBus(1);
+	//Uncomment for microbit Radio receiver
+	if(false)readSerialBus(1);
+
+}
+
+//-----------------------------------------
+void ofApp::loadGuiImages(){
+	
+	//making a image button. Follow ImGui OF example
+	imageButtonLetsWorkSource.load("img/workPlay.png");
+	imageButtonLetsWorkID = gui.loadImage(imageButtonLetsWorkSource);
+	
+	imageButtonVideoSource.load("img/fotoPlay.png");
+	imageButtonVideoSourceID = gui.loadImage(imageButtonVideoSource);
+	
+	imageButtonImageSource.load("img/videoPlay.png");
+	imageButtonImageSourceID = gui.loadImage(imageButtonImageSource);
+	
+	imageButtonRecordSource.load("img/record.png");
+	imageButtonRecordSourceID = gui.loadImage(imageButtonRecordSource);
+
+	imageButtonExitSource.load("img/exit.png");
+	imageButtonExitSourceID = gui.loadImage(imageButtonExitSource);
+	
+	imageButtonLetsStartSource.load("img/letsStart.png");
+	imageButtonLetsStartSourceID = gui.loadImage(imageButtonLetsStartSource);
+	
+	imageButtonAddOneSource.load("img/addOne.png");
+	imageButtonAddOneSourceID = gui.loadImage(imageButtonAddOneSource);
+	
+	imageButtonReStartSource.load("img/restart.png");
+	imageButtonReStartSourceID = gui.loadImage(imageButtonReStartSource);
 
 }
 
@@ -123,41 +154,51 @@ void ofApp::draw(){
 	gui.begin();
 	switch( screen )  
   	{	  
-    case 0:  
-
-      imgScreen[0].draw(0,0);
+    case 0:
+		imgScreen[0].draw(0,0);
+		screenStart();
 			
-    	if(change){screen++;change=0;}
-      break; 
+		if(change){screen++;change=0;}
+      	break;
 
-    case 1:  
-    	imgScreen[6].draw(0,0);
-  		screenName();    
-      break;
+    case 1:
+			
+		imgScreen[6].draw(0,0);
+		screenName();
+      	break;
 
-    case 2:  
-      imgScreen[5].draw(0,0);
-      screenPhotoVideo();
-      break;  
+    case 2:
+			
+      	imgScreen[5].draw(0,0);
+      	screenPhotoVideo();
+      	break;
 
-    case 3:  
+    case 3:
+			
  		imgScreen[6].draw(0,0);
   		screenMediaName();    
       break;
 
-    case 4:  
+    case 4:
+		
+			
       imgScreen[3].draw(0,0);
-      //screenPlay();
+      screenPlay();
       if(change){screen++;change=0;}
       break; 
 
     case 5:
+			
+			
     	imgScreen[7].draw(0,0);
     	screenVideoRecorder();
     	if(change){screen++;change=0;}
     	break;
 
     case 6:
+			
+		screenEndOrRestart();
+			
     	imgScreen[10].draw(0,0);
     	if(change){screen=0;change=0;}
     	break;
@@ -170,9 +211,37 @@ void ofApp::draw(){
 
 }
 
+
+//---------------------------------------
+void ofApp::screenStart(){
+	
+	bool pressed = false;
+	
+	cout << "Screen " << screen << endl;
+	if(true)ImGui::SetWindowPos(ImVec2(29,14));
+	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
+	
+	if(true)ImGui::SetWindowSize((ImVec2(389,237)));
+	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+	
+	pressed = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonLetsWorkID, ImVec2(367,200));
+	
+	if(pressed)change = 1;
+}
+
 //--------------------------------------
 void ofApp::screenVideoRecorder(){
 
+	cout << "Screen " << screen << endl;
+	if(false)ImGui::SetWindowPos(ImVec2(146,360));
+	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
+	
+	if(false)ImGui::SetWindowSize((ImVec2(485,109)));
+	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+	
+	
+	//////////////////////////////
+	
     ofSetColor(255, 255, 255);
     vidGrabber.draw(ofGetWidth()/2 - 320,ofGetHeight()/2-200);
 
@@ -182,6 +251,9 @@ void ofApp::screenVideoRecorder(){
     << "FPS: " << ofGetFrameRate() << endl
     << (bRecording?"pause":"start") << " recording: r" << endl
     << (bRecording?"close current video file: c":"") << endl;
+	
+	
+	//TODO ADD IMAGES OR MODIF R to
 
     ofSetColor(0,0,0,100);
     ofRect(0, 0, 260, 75);
@@ -205,7 +277,16 @@ void ofApp::screenVideoRecorder(){
 //---------------------------------------
 void ofApp::screenName(){
 	
+	cout << "Screen " << screen << endl;
+	if(true)ImGui::SetWindowPos(ImVec2(146,360));
+	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
+	
+	if(true)ImGui::SetWindowSize((ImVec2(485,109)));
+	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+	
 
+	//////////////
+	
 	//imgScreen[1].draw(0,0); 
 	ImGui::Text("Project");
 	ImGui::InputText("Name", projectName, IM_ARRAYSIZE(projectName));
@@ -227,9 +308,15 @@ void ofApp::screenName(){
 //---------------------------------------
 void ofApp::screenMediaName(){
 	
-
-
-
+	cout << "Screen " << screen << endl;
+	if(false)ImGui::SetWindowPos(ImVec2(146,360));
+	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
+	
+	if(false)ImGui::SetWindowSize((ImVec2(485,109)));
+	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+	
+	//////
+	
 	ImGui::Text("Video Description");
 	ImGui::InputText("Name", videoName, IM_ARRAYSIZE(videoName));
 	ImGui::InputText("Description", videoDescription, IM_ARRAYSIZE(videoDescription));
@@ -249,7 +336,19 @@ void ofApp::screenMediaName(){
 //---------------------------------------
 void ofApp::screenPlay(){
 	
+	bool pressed = false;
+	
+	cout << "Screen " << screen << endl;
+	if(true)ImGui::SetWindowPos(ImVec2(63,57));
+	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
+	
+	if(true)ImGui::SetWindowSize((ImVec2(388,237)));
+	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+	
+	pressed = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonLetsWorkID, ImVec2(367,200));
 
+	if(pressed)change = 1;
+	
 	//ofSetColor(100);
 	//verdana.drawString("PLAY", 400, 300);
 
@@ -259,19 +358,88 @@ void ofApp::screenPlay(){
 //---------------------------------------
 void ofApp::screenPhotoVideo(){
 	
-
-	//imgScreen[1].draw(0,0); 
-	ImGui::Text("Choose media format");
-
-  	ImGui::RadioButton("Video", &mediaFormat, 0); ImGui::SameLine();
-  	ImGui::RadioButton("Photo", &mediaFormat, 1); 
+	cout << "Screen " << screen << endl;
+	if(true)ImGui::SetWindowPos(ImVec2(159,299));
+	else cout << "gui 1 pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
+	if(true)ImGui::SetWindowSize((ImVec2(383,260)));
+	else cout << "gui 1 size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
 
-	if (ImGui::Button("Next")) {
-		screen++;
+
+	////////
+	if(false){
+		//imgScreen[1].draw(0,0);
+		ImGui::Text("Choose media format");
+
+		ImGui::RadioButton("Video", &mediaFormat, 0); ImGui::SameLine();
+		ImGui::RadioButton("Photo", &mediaFormat, 1);
+		
+
+		if (ImGui::Button("Next")) {
+			screen++;
+		}
+	}else{
+		bool pressedPhoto = false;
+		bool pressedVideo = false;
+		
+		pressedPhoto = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonVideoSourceID, ImVec2(367,200));
+		
+		
+		//....
+		// 2. Show another window, this time using an explicit ImGui::Begin and ImGui::End
+		if (true)
+		{
+			//note: ofVec2f and ImVec2f are interchangeable
+			ImGui::SetNextWindowSize(ofVec2f(200,100), ImGuiSetCond_FirstUseEver);
+			ImGui::Begin("Selection");
+			pressedVideo = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonImageSourceID, ImVec2(367,200));
+			if(true)ImGui::SetWindowPos(ImVec2(733,299));
+			else cout << "gui 2 pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
+			
+			if(true)ImGui::SetWindowSize((ImVec2(383,260)));
+			else cout << "gui 2 size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+			
+			ImGui::End();
+		}
+		
+		/*
+
+		*/
+	
+		if(pressedPhoto){
+			mediaFormat = 0;
+			screen++;
+		}
+		if(pressedVideo){
+			mediaFormat = 1;
+			screen++;
+		}
 	}
 
 
+}
+
+//--------------------------------------
+void ofApp::screenEndOrRestart(){
+	
+	bool pressedRestart = false;
+	bool pressedAddOne = false;
+	bool pressedExit = false;
+	
+	cout << "Screen " << screen << endl;
+	if(true)ImGui::SetWindowPos(ImVec2(187,219));
+	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
+	
+	if(true)ImGui::SetWindowSize((ImVec2(272,530)));
+	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+	
+	pressedRestart = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonReStartSourceID, ImVec2(245,160));
+	pressedAddOne = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonAddOneSourceID, ImVec2(245,160));
+	pressedExit = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonExitSourceID, ImVec2(245,160));
+	
+	if(pressedRestart)change = 1;
+	if(pressedAddOne){screen = 3;change=0;}
+	if(pressedExit)ofExit();
 }
 
 
@@ -493,10 +661,11 @@ void ofApp::endSaveSubtitlesFile(){
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 
+	//TODO: check case when it's recording, and press SPACE. Must not change until end video recording.
 	if(key == OF_KEY_SPACE){
 		change = 1;
 	}
-
+	
 
 
     if(key=='r'){
@@ -530,9 +699,8 @@ void ofApp::keyReleased(int key){
 		endSaveSubtitlesFile();
     }
 	
-	if (key == 'f') { // adding one subtitle
+	if (key == OF_KEY_RETURN || 'f') { // adding one subtitle
 		flags();
-		
 	}
 }
 
