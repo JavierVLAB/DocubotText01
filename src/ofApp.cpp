@@ -3,20 +3,11 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+	ofSetFrameRate(60);
+	
 	gui.setup();
-	
 	loadGuiImages();
-	
-
-	for (int i = 0; i < NScreen; i++)
-	{
-	
-		if(i<10){
-			imgScreen[i].load("SCREENS/SCREEN_0" + ofToString(i) + ".png");
-		} else {
-			imgScreen[i].load("SCREENS/SCREEN_" + ofToString(i) + ".png");
-		}
-	}
+	loadScreensImages();
 
 
 	ofTrueTypeFont::setGlobalDpi(72);
@@ -26,11 +17,10 @@ void ofApp::setup(){
 	verdana.setLetterSpacing(1.037);
 
 	/// Video Recorder
-
 	sampleRate = 44100;
     channels = 2;
 
-    ofSetFrameRate(60);
+	
     ofSetLogLevel(OF_LOG_VERBOSE);
 	
 	//select my external or internal camera
@@ -39,34 +29,17 @@ void ofApp::setup(){
 	else if (namesDevices.size() > 0)vidGrabber.setDeviceID(0);
 	else cout << "NO CAMERAS detected!" << endl;
 	
-    vidGrabber.setDesiredFrameRate(30);
-    vidGrabber.initGrabber(640,400);
-		#ifdef TARGET_WIN32
-			vidRecorder.setFfmpegLocation("C:\\ffmpeg\\bin\\"); // use this is you have ffmpeg installed in your data folder
-		#endif
-		    fileName = "testMovie";
-		    fileExt = ".mp4"; // ffmpeg uses the extension to determine the container type. run 'ffmpeg -formats' to see supported formats
-
-    // override the default codecs if you like
-    // run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
-    vidRecorder.setVideoCodec("mpeg4"); 
-    vidRecorder.setVideoBitrate("800k");
-    vidRecorder.setAudioCodec("mp3");
-    vidRecorder.setAudioBitrate("192k");
+	//
+	setupVideoRecorder();
 
 //    soundStream.listDevices();
 //    soundStream.setDeviceID(11);
     soundStream.setup(this, 0, channels, sampleRate, 256, 4);
 
     //ofSetWindowShape(vidGrabber.getWidth(), vidGrabber.getHeight()	);
-    bRecording = false;
     ofEnableAlphaBlending();
 
-
-
     // Serial Setup
-
-	
 	bSendSerialMessage = false;
 	ofBackground(255);	
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -114,6 +87,18 @@ void ofApp::update(){
 	//Uncomment for microbit Radio receiver
 	if(false)readSerialBus(1);
 
+}
+
+//-----------------------------------------
+void ofApp::loadScreensImages(){
+	for (int i = 0; i < NScreen; i++)
+	{
+		if(i<10){
+			imgScreen[i].load("SCREENS/SCREEN_0" + ofToString(i) + ".png");
+		} else {
+			imgScreen[i].load("SCREENS/SCREEN_" + ofToString(i) + ".png");
+		}
+	}
 }
 
 //-----------------------------------------
@@ -184,7 +169,12 @@ void ofApp::draw(){
 			
       imgScreen[3].draw(0,0);
       screenPlay();
-      if(change){screen++;change=0;}
+      if(change){
+		  screen++;change=0;
+		  //Init camera
+		  vidGrabber.setDesiredFrameRate(30);
+		  vidGrabber.initGrabber(640,400);
+	  }
       break; 
 
     case 5:
@@ -192,7 +182,11 @@ void ofApp::draw(){
 			
     	imgScreen[7].draw(0,0);
     	screenVideoRecorder();
-    	if(change){screen++;change=0;}
+    	if(change){
+			screen++;change=0;
+			//End camera
+			vidGrabber.close();
+		}
     	break;
 
     case 6:
@@ -229,6 +223,25 @@ void ofApp::screenStart(){
 	if(pressed)change = 1;
 }
 
+//-------------------------------------
+void ofApp::setupVideoRecorder(){
+	
+
+#ifdef TARGET_WIN32
+	vidRecorder.setFfmpegLocation("C:\\ffmpeg\\bin\\"); // use this is you have ffmpeg installed in your data folder
+#endif
+	fileName = "testMovie";
+	fileExt = ".mp4"; // ffmpeg uses the extension to determine the container type. run 'ffmpeg -formats' to see supported formats
+	
+	// override the default codecs if you like
+	// run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
+	vidRecorder.setVideoCodec("mpeg4");
+	vidRecorder.setVideoBitrate("800k");
+	vidRecorder.setAudioCodec("mp3");
+	vidRecorder.setAudioBitrate("192k");
+	
+	
+}
 //--------------------------------------
 void ofApp::screenVideoRecorder(){
 
@@ -252,6 +265,8 @@ void ofApp::screenVideoRecorder(){
 			bRecording = false;
 	        flag = 0;
 	        vidRecorder.close();
+			//subtitles
+			endSaveSubtitlesFile();
     	}
 
 	} else {
@@ -729,7 +744,7 @@ void ofApp::keyReleased(int key){
 	}
 	
 
-
+/*
     if(key=='r'){
         recording();
     }
@@ -742,6 +757,7 @@ void ofApp::keyReleased(int key){
 		//subtitles
 		endSaveSubtitlesFile();
     }
+ */
 	
 	if (key == OF_KEY_RETURN || 'f') { // adding one subtitle
 		flags();

@@ -32,8 +32,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-
-	void loadGuiImages();
+		void loadScreensImages();
+		void loadGuiImages();
 		void screenStart();
 		void screenName();
 		void screenPlay();
@@ -63,9 +63,8 @@ class ofApp : public ofBaseApp{
 		int changeScreen = 0;
 
 		// Video Recording
-
+		void setupVideoRecorder();
 		void screenVideoRecorder();
-
 		void audioIn(float * input, int bufferSize, int nChannels);
 	
 		//Subtitles Functions
@@ -77,7 +76,7 @@ class ofApp : public ofBaseApp{
 	    ofVideoGrabber      vidGrabber;
 	    ofxVideoRecorder    vidRecorder;
 	    ofSoundStream       soundStream;
-	    bool bRecording;
+	    bool bRecording = false;
 	    int sampleRate;
 	    int channels;
 	    string fileName;
