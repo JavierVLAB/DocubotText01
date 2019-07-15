@@ -116,7 +116,20 @@ void ofApp::loadGuiImages(){
 	
 	imageButtonRecordSource.load("img/record.png");
 	imageButtonRecordSourceID = gui.loadImage(imageButtonRecordSource);
-
+	
+	imageButtonStopRecordSource.load("img/stopRecord.png");
+	imageButtonStopRecordSourceID = gui.loadImage(imageButtonStopRecordSource);
+	
+	imageButtonPauseRecordSource.load("img/pauseRecord.png");
+	imageButtonPauseRecordSourceID = gui.loadImage(imageButtonPauseRecordSource);
+	
+	
+	imageButtonFlagRecordSource.load("img/flagIcon.png");
+	imageButtonFlagRecordSourceID = gui.loadImage(imageButtonFlagRecordSource);
+	
+	imageButtonNextIconSource.load("img/nextIcon.png");
+	imageButtonNextIconSourceID = gui.loadImage(imageButtonNextIconSource);
+	
 	imageButtonExitSource.load("img/exit.png");
 	imageButtonExitSourceID = gui.loadImage(imageButtonExitSource);
 	
@@ -244,24 +257,29 @@ void ofApp::setupVideoRecorder(){
 }
 //--------------------------------------
 void ofApp::screenVideoRecorder(){
-
+	
 	//cout << "Screen " << screen << endl;
-	if(true)ImGui::SetWindowPos(ImVec2(320,590));
+	if(true)ImGui::SetWindowPos(ImVec2(563,483));
 	else cout << "gui pos" << ImGui::GetWindowPos().x << " & " << ImGui::GetWindowPos().y << endl;
 	
-	if(true)ImGui::SetWindowSize((ImVec2(235,60)));
-	else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
-	
 	if(bRecording){
-		if (ImGui::Button("PAUSE")) { 
+		
+		if(true)ImGui::SetWindowSize((ImVec2(450,180)));
+		else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+		
+		bool pressedPAUSEREC = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonPauseRecordSourceID, ImVec2(128,128));
+		if (pressedPAUSEREC) { //ImGui::Button("PAUSE")
 			recording();
 		}
-		ImGui::SameLine(); 
-		if (ImGui::Button("FLAG")){
+		ImGui::SameLine();
+		
+		bool pressedFLAGREC = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonFlagRecordSourceID, ImVec2(128,128));
+		if (pressedFLAGREC){//ImGui::Button("FLAG")
 			flags();
     	}
-    	ImGui::SameLine(); 
-		if (ImGui::Button("STOP")){
+    	ImGui::SameLine();
+		bool pressedSTOPREC = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonStopRecordSourceID, ImVec2(128,128));
+		if (pressedSTOPREC){//ImGui::Button("STOP")
 			bRecording = false;
 	        flag = 0;
 	        vidRecorder.close();
@@ -270,12 +288,17 @@ void ofApp::screenVideoRecorder(){
     	}
 
 	} else {
-		if (ImGui::Button("PLAY")) { 
-			
+		
+		if(true)ImGui::SetWindowSize((ImVec2(300,180)));
+		else cout << "gui size" << ImGui::GetWindowSize().x << " & " << ImGui::GetWindowSize().y << endl;
+		
+		bool pressedREC = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonRecordSourceID, ImVec2(128,128));
+		if (pressedREC) {
 			recording();
 		}
-		ImGui::SameLine(); 
-		if (ImGui::Button("Next")){
+		ImGui::SameLine();
+		bool pressedNEXTREC = ImGui::ImageButton((ImTextureID)(uintptr_t)imageButtonNextIconSourceID, ImVec2(128,128));
+		if (pressedNEXTREC){//ImGui::Button("Next")
 			screen++;
     	}
 
@@ -287,7 +310,7 @@ void ofApp::screenVideoRecorder(){
 	//////////////////////////////
 	
     ofSetColor(255, 255, 255);
-    vidGrabber.draw(ofGetWidth()/2 - 320,ofGetHeight()/2-200);
+    vidGrabber.draw(0,0);//ofGetWidth()/2 - 320,ofGetHeight()/2-200
 
     stringstream ss;
     ss << "video queue size: " << vidRecorder.getVideoQueueSize() << endl

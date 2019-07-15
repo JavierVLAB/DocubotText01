@@ -42,8 +42,8 @@ class ofApp : public ofBaseApp{
 		void screenEndOrRestart();
 
 		ofxImGui::Gui gui;
-	    ofImage imageButtonLetsWorkSource, imageButtonVideoSource, imageButtonImageSource, imageButtonAddOneSource, imageButtonLetsStartSource, imageButtonExitSource, imageButtonRecordSource, imageButtonReStartSource;
-	    GLuint imageButtonLetsWorkID, imageButtonVideoSourceID, imageButtonImageSourceID, imageButtonAddOneSourceID, imageButtonLetsStartSourceID, imageButtonExitSourceID, imageButtonRecordSourceID, imageButtonReStartSourceID;
+	    ofImage imageButtonLetsWorkSource, imageButtonVideoSource, imageButtonImageSource, imageButtonAddOneSource, imageButtonLetsStartSource, imageButtonExitSource, imageButtonRecordSource, imageButtonReStartSource, imageButtonStopRecordSource, imageButtonPauseRecordSource, imageButtonNextIconSource, imageButtonFlagRecordSource;
+	    GLuint imageButtonLetsWorkID, imageButtonVideoSourceID, imageButtonImageSourceID, imageButtonAddOneSourceID, imageButtonLetsStartSourceID, imageButtonExitSourceID, imageButtonRecordSourceID, imageButtonReStartSourceID, imageButtonStopRecordSourceID, imageButtonPauseRecordSourceID, imageButtonNextIconSourceID, imageButtonFlagRecordSourceID;
 	
 		int screen = 0;
 		ofImage imgScreen[NScreen];
