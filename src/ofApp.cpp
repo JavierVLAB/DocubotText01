@@ -186,7 +186,7 @@ void ofApp::draw(){
 		  screen++;change=0;
 		  //Init camera
 		  vidGrabber.setDesiredFrameRate(30);
-		  vidGrabber.initGrabber(640,400);
+		  vidGrabber.initGrabber(resScreenGrabber_width,resScreenGrabber_height);
 	  }
       break; 
 

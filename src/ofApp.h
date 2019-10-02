@@ -13,6 +13,9 @@
 #define OF_KEY_SPACE 32
 #define NScreen    11
 
+int resScreenGrabber_width = 640;
+int resScreenGrabber_height = 480;
+
 class ofApp : public ofBaseApp{
 
 	public:
